@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.utils import timezone
+from django.contrib.postgres.fields import JSONField
 
 
 class similar_users(models.Model):
@@ -20,28 +21,29 @@ class similar_attractions(models.Model):
 
 
 class user_attraction_recommendations(models.Model):
-    user_id = model.IntegerField()
+    user_id = models.IntegerField()
     attraction_id = models.IntegerField()
     score = models.FloatField()
     rank = models.IntegerField()
-    created_ts = model.DateTimeField()
+    created_ts = models.DateTimeField()
     model_id = models.ForeignKey('Models', on_delete=models.CASCADE)
 
 
 class attraction_user_recommendations(models.Model):
     attraction_id = models.IntegerField()
-    user_id = model.IntegerField()
+    user_id = models.IntegerField()
     score = models.FloatField()
     rank = models.IntegerField()
-    created_ts = model.DateTimeField()
+    created_ts = models.DateTimeField()
     model_id = models.ForeignKey('ml_model', on_delete=models.CASCADE)
 
 
 class ml_model(models.Model):
     model_name = models.CharField(max_length=200)
     model_url = models.CharField(max_length=200)
-    model_type = models.CharField(max_length=200)
+    model_type = models.CharField(max_length=200) #recommender, classifier, regressor
     model_algorithm = models.CharField(max_length=200)
+    model_hyperparameters = JSONField()
     model_rmse = models.FloatField()
     model_accuracy = models.FloatField()
     model_precision = models.FloatField()
